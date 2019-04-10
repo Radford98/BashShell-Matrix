@@ -1,0 +1,50 @@
+#Brad Powell
+#CS344_400 Spring 2019
+#Program 1 - Matrix
+
+#!/bin/bash
+
+# Accepts a single matrix from stdin or as a parameter and reports the dimensions in "rows columns"
+dims() {
+
+ROWS=0
+COLS=0
+
+datafilepath="datafile$$"
+if [ "$#" = "0" ]
+then
+	cat > "$datafilepath"
+elif [ "$#" = "1" ]
+then
+	datafilepath=$1
+fi
+
+# Determine the number of columns
+read < $datafilepath
+for var in $REPLY
+do
+	(( COLS++ ))
+done
+
+# Determine the number of rows. 
+while read
+do
+	(( ROWS++ ))
+done < $datafilepath
+
+echo "$ROWS $COLS"
+
+# Delete the temporary data file if necessary
+if [ "$#" = "0" ]
+then
+	rm -f $datafilepath
+fi
+
+}
+
+#
+#additional functions go here
+#
+
+$1 "${@:2}"
+

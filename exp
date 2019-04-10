@@ -1,0 +1,6 @@
+#!/bin/bash
+
+read < $1
+echo $REPLY
+read < $1
+echo $REPLY

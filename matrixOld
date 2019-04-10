@@ -1,0 +1,62 @@
+#Brad Powell
+#CS344_400 Spring 2019
+#Program 1 - Matrix
+
+#!/bin/bash
+
+# Accepts a single matrix from stdin or as a parameter and reports the dimensions in "rows columns"
+dims() {
+
+ROWS=0
+COLS=0
+
+# First check for stdin
+[ -t 0 ]
+if [ $? -eq 1 ]
+then
+	# Determine the number of columns
+	read matrix
+	for var in $matrix
+	do
+		(( COLS++ ))
+	done
+
+	# Determine the number of rows. First was read from previous command,
+	# so increment ROWS first.
+	(( ROWS++ ))
+	while read matrix
+	do
+		(( ROWS++ ))
+	done
+
+	#trace statements
+	echo "Cols: $COLS"
+	echo "Rows: $ROWS"
+
+	# Output of rows and columns
+	echo "$ROWS $COLS"
+
+elif [ $# -eq 1 ]
+then
+	# Determine the number of columns
+	read matrix < $1
+	for var in $matrix
+	do
+		(( COLS++ ))
+	done
+
+	# Determine the number of rows. Does not need to be incremented
+	# like before because it pulls param 1 in again.
+	while read matrix
+	do
+		(( ROWS++ ))
+	done < $1
+
+	echo "$ROWS $COLS"
+# If there is neither stndin nor a parameter, send a message to stderr
+else	
+	echo "error in reading data" 1>&2
+	exit 1
+fi
+
+}

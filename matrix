@@ -14,7 +14,18 @@ then
 elif [ "$#" = "1" ]
 then
 	datafilepath=$1
+else
+	echo "Incorrect method of input" 1>&2
+	exit 1
 fi
+
+read < $datafilepath
+if [ $? -ne 0 ]
+then
+	echo "Error reading file" 1>&2
+	exit 2
+fi
+
 
 # Use wc to count the lines/rows, pipe that into read to remove the " [file_name]",
 # using a subshell to echo the reply.
@@ -32,6 +43,13 @@ then
 fi
 
 }
+
+# Accepts a matrix either
+#mean() {
+
+
+
+#}
 
 #
 #additional functions go here

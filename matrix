@@ -7,9 +7,6 @@
 # Accepts a single matrix from stdin or as a parameter and reports the dimensions in "rows columns"
 dims() {
 
-ROWS=0
-COLS=0
-
 datafilepath="datafile$$"
 if [ "$#" = "0" ]
 then
@@ -19,19 +16,13 @@ then
 	datafilepath=$1
 fi
 
-# Determine the number of columns
-read < $datafilepath
-for var in $REPLY
-do
-	(( COLS++ ))
-done
-
-# Determine the number of rows. 
-while read
-do
-	(( ROWS++ ))
-done < $datafilepath
-
+# Use wc to count the lines/rows, pipe that into read to remove the " [file_name]",
+# using a subshell to echo the reply.
+# COLS is first set to the number of words in the matrix, then divided by the number of rows
+# to get the number of columns.
+ROWS=`wc -l $datafilepath | (read -d " "; echo $REPLY)`
+COLS=`wc -w $datafilepath | (read -d " "; echo $REPLY)`
+(( COLS = COLS / ROWS ))
 echo "$ROWS $COLS"
 
 # Delete the temporary data file if necessary

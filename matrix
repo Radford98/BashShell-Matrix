@@ -4,28 +4,28 @@
 
 #!/bin/bash
 
-# Accepts a single matrix from stdin or as a parameter and reports the dimensions in "rows columns"
-dims() {
-
+# Set up file path - used for dims, mean, transpose
 datafilepath="datafile$$"
-if [ "$#" = "0" ]
+if [ "$#" = "1" ]
 then
 	cat > "$datafilepath"
-elif [ "$#" = "1" ]
+elif [ "$#" = "2" ]
 then
-	datafilepath=$1
-else
-	echo "Incorrect method of input" 1>&2
-	exit 1
+	datafilepath=$2
 fi
+
+
+
+############################################################################################
+# Accepts a single matrix from stdin or as a parameter and reports the dimensions in "rows columns"
+dims() {
 
 read < $datafilepath
 if [ $? -ne 0 ]
 then
 	echo "Error reading file" 1>&2
-	exit 2
+	exit 1
 fi
-
 
 # Use wc to count the lines/rows, pipe that into read to remove the " [file_name]",
 # using a subshell to echo the reply.
@@ -36,24 +36,34 @@ COLS=`wc -w $datafilepath | (read -d " "; echo $REPLY)`
 (( COLS = COLS / ROWS ))
 echo "$ROWS $COLS"
 
-# Delete the temporary data file if necessary
-if [ "$#" = "0" ]
-then
-	rm -f $datafilepath
-fi
+}
+
+###########################################################################################
+# Accepts a matrix either from stdin or as a parameter. It calculates and prints the mean of
+# each column of the provided matrix.
+mean() {
+
+echo "mean function"
+# Create ROWS/COLS variables for use in loops
+dims $datafilepath > /dev/null
+
+
+
+
 
 }
 
-# Accepts a matrix either
-#mean() {
-
-
-
-#}
 
 #
 #additional functions go here
 #
 
+# Converts the first parameter into a function call and the rest of the parameters to the function's parameters.
 $1 "${@:2}"
 
+
+# Delete the temporary data file if necessary
+if [ "$#" = "1" ]
+then
+	rm -f $datafilepath
+fi

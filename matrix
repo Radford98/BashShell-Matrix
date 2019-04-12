@@ -46,15 +46,16 @@ mean() {
 # Create ROWS/COLS variables for use in loops. Dump the echo into null.
 dims $datafilepath > /dev/null
 
-# Variable to hold the total of a column
-TOTAL=0
 # String to hold the means for reporting
 STRING=""
 
-# Cut the matrix one column at a time.
+# Loop to cut (by field) one column of the matrix at a time. It adds up the numbers in that
+# column and uses that total with the number of rows (from 'dims' earlier) as well as
+# the provided rounding formula to calculate the mean.
 i=1
 while [ $i -le $COLS ]
 do
+	# Variable to hold the total of a column
 	TOTAL=0
 	TEMP=`cut -f $i $datafilepath`
 	for var in $TEMP
@@ -64,9 +65,9 @@ do
 	done
 
 	# Calculate the mean from TOTAL/number of rows
-	(( MEAN = TOTAL/ROWS ))
+	(( MEAN = (TOTAL + (ROWS/2)*( (TOTAL>0)*2-1)) / ROWS ))
 
-	# Calculate the mean and add it to the string
+	# Construct the string for reporting
 	STRING+="$MEAN\t"
 
 	(( i++ ))

@@ -43,33 +43,40 @@ echo "$ROWS $COLS"
 # each column of the provided matrix.
 mean() {
 
-echo "mean function"
-# Create ROWS/COLS variables for use in loops
+# Create ROWS/COLS variables for use in loops. Dump the echo into null.
 dims $datafilepath > /dev/null
 
-# Calculate whether there is an odd or even number of rows
-(( MATH = ROWS % 2 ))
-if [ $MATH -eq 1 ]
-then
-	echo "odd"
-else
-	echo "even"
-fi
-# Array to hold a column of data at a time
-ARRAY=()
+# Variable to hold the total of a column
+TOTAL=0
+# String to hold the means for reporting
+STRING=""
 
 # Cut the matrix one column at a time.
 i=1
 while [ $i -le $COLS ]
 do
+	TOTAL=0
 	TEMP=`cut -f $i $datafilepath`
 	for var in $TEMP
 	do
-		echo $var
+		# Add up the column
+		(( TOTAL += var ))
 	done
+
+	# Calculate the mean from TOTAL/number of rows
+	(( MEAN = TOTAL/ROWS ))
+
+	# Calculate the mean and add it to the string
+	STRING+="$MEAN\t"
 
 	(( i++ ))
 done
+
+# Remove the tab from the end of the string
+STRING=${STRING%?%?}
+
+# Report the means as a 1xN matrix
+echo -e $STRING
 
 
 }

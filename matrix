@@ -39,6 +39,32 @@ echo "$ROWS $COLS"
 }
 
 ###########################################################################################
+# Accepts a matrix either from stin or as a parameter. It reflects a matrix along its
+# diagonal, turning an MxN matrix into NxM. For example, the element at [1, 2] becomes the
+# element at [2, 1]
+transpose() {
+echo "transpose function"
+
+# Create ROWS/COLS variables for use in loops/calculations. Dump the echo into null.
+dims $datafilepath > /dev/null
+
+# Array to hold the matrix elements
+ARRAY=()
+
+# Fill array with the elements
+while read
+do
+	for var in $REPLY
+	do
+		ARRAY+=( "$var" )
+	done
+done < $datafilepath
+
+}
+
+
+
+###########################################################################################
 # Accepts a matrix either from stdin or as a parameter. It calculates and prints the mean of
 # each column of the provided matrix.
 mean() {

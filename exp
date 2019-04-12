@@ -4,3 +4,14 @@ read < $1
 echo $REPLY
 read < $1
 echo $REPLY
+
+
+while read
+do
+	for var in $REPLY
+	do
+		echo $var
+	done
+done < $1
+
+

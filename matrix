@@ -239,7 +239,7 @@ while read
 do
 	STRING=""
 	x=1	# Used to keep track of which column to cut
-	while [ $x -le $ROWS2 ]
+	while [ $x -le $COLS2 ]
 	do
 		# Store a column of matrix 2 in ARRAY
 		ARRAY=()
@@ -248,7 +248,6 @@ do
 		do
 			ARRAY+=( "$var" )
 		done
-echo "trace array: $ARRAY"
 		
 		# For each element in REPLY, multiply by corresponding number in the array,
 		# adding the result to SUM.
@@ -257,7 +256,6 @@ echo "trace array: $ARRAY"
 		for var in $REPLY
 		do
 			(( SUM += (var * ARRAY[i]) ))
-echo -e "trace\nvar: $var\narray: ${ARRAY[$i]}\nsum: $SUM"
 			(( i++ ))
 		done
 

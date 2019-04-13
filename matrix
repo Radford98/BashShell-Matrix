@@ -226,8 +226,51 @@ then
 	exit 3
 fi
 
+# This loop grabs the first row of the first matrix with read.
+# Nested loop goes through each column of the second matrix, using the cut command.
+# The values of the second matrix are stored in an array, then another loop goes through
+# the values of the first matrix (in REPLY), multiplying the appropriate matrix cells
+# together and adding it to SUM.
+# A string is constructed with the the sums. Once all columns of matrix 2 are multiplied
+# by the row of matrix 1, the string is printed.
+# Repeat until the multiplication is complete
 
+while read
+do
+	STRING=""
+	x=1	# Used to keep track of which column to cut
+	while [ $x -le $ROWS2 ]
+	do
+		# Store a column of matrix 2 in ARRAY
+		ARRAY=()
+		y=`cut -f $x $2`	# Cut the x-th field/column of matrix 2 and store in y
+		for var in $y
+		do
+			ARRAY+=( "$var" )
+		done
+echo "trace array: $ARRAY"
+		
+		# For each element in REPLY, multiply by corresponding number in the array,
+		# adding the result to SUM.
+		i=0	# Index for array
+		SUM=0	# Sum of row*column multiplication
+		for var in $REPLY
+		do
+			(( SUM += (var * ARRAY[i]) ))
+echo -e "trace\nvar: $var\narray: ${ARRAY[$i]}\nsum: $SUM"
+			(( i++ ))
+		done
 
+		STRING+="$SUM\t"
+		(( x++ ))
+	done
+
+	# Cut off last tab and echo
+	STRING=${STRING%?}
+	STRING=${STRING%?}
+	echo -e "$STRING"
+
+done < $1
 
 }
 

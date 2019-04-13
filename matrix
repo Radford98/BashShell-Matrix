@@ -43,7 +43,6 @@ echo "$ROWS $COLS"
 # diagonal, turning an MxN matrix into NxM. For example, the element at [1, 2] becomes the
 # element at [2, 1]
 transpose() {
-echo "transpose function"
 
 # Create ROWS/COLS variables for use in loops/calculations. Dump the echo into null.
 dims $datafilepath > /dev/null

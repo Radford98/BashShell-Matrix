@@ -17,9 +17,11 @@ fi
 
 
 ############################################################################################
-# Accepts a single matrix from stdin or as a parameter and reports the dimensions in "rows columns"
+# Accepts a single matrix from stdin or as a parameter and reports
+# the dimensions in "rows columns"
 dims() {
 
+# Error checking for unreadable file
 read < $datafilepath
 if [ $? -ne 0 ]
 then
@@ -29,8 +31,8 @@ fi
 
 # Use wc to count the lines/rows, pipe that into read to remove the " [file_name]",
 # using a subshell to echo the reply.
-# COLS is first set to the number of words in the matrix, then divided by the number of rows
-# to get the number of columns.
+# COLS is first set to the number of words/numbers in the matrix,
+# then divided by the number of rows to get the number of columns.
 ROWS=`wc -l $datafilepath | (read -d " "; echo $REPLY)`
 COLS=`wc -w $datafilepath | (read -d " "; echo $REPLY)`
 (( COLS = COLS / ROWS ))
@@ -45,12 +47,12 @@ echo "$ROWS $COLS"
 transpose() {
 
 # Create ROWS/COLS variables for use in loops/calculations. Dump the echo into null.
+# Also checks for unreadable files
 dims $datafilepath > /dev/null
 
-# Array to hold the matrix elements
+# First, the elements of the matrix are stored in an array so they are
+# random-accessible based on need for the transposed matrix.
 ARRAY=()
-
-# Fill array with the elements
 while read
 do
 	for var in $REPLY
@@ -95,6 +97,7 @@ done
 mean() {
 
 # Create ROWS/COLS variables for use in loops. Dump the echo into null.
+# Also error checks for unreadable files.
 dims $datafilepath > /dev/null
 
 # String to hold the means for reporting
@@ -102,13 +105,12 @@ STRING=""
 
 # Loop to cut (by field) one column of the matrix at a time. It adds up the numbers in that
 # column and uses that total with the number of rows (from 'dims' earlier) as well as
-# the provided rounding formula to calculate the mean.
+# the rounding formula from the assignment page to calculate the mean.
 i=1
 while [ $i -le $COLS ]
 do
-	# Variable to hold the total of a column
-	TOTAL=0
-	TEMP=`cut -f $i $datafilepath`
+	TOTAL=0 	# Variable to hold the total of a column
+	TEMP=`cut -f $i $datafilepath`	# Cut the column and store in TEMP
 	for var in $TEMP
 	do
 		# Add up the column
@@ -137,6 +139,7 @@ echo -e $STRING
 # Accepts two matrices of the same size and adds them together, printing out the new matrix
 add () {
 
+# Error checking for two arguments
 if [ $# -ne 2 ]
 then
 	echo "Improper number of matrices" 1>&2
@@ -180,6 +183,8 @@ do
 	j=0
 	for var in $REPLY
 	do
+		# Adds the element of the second matrix to the first and stores in array.
+		# That value is then added to the string.
 		(( ARRAY[ (( (i * COLS1) + j )) ]+=var ))
 		STRING+="${ARRAY[ (( (i*COLS1)+j )) ]}\t"
 		
@@ -271,9 +276,15 @@ done < $1
 
 }
 
-# Converts the first parameter into a function call and the rest of the parameters to the function's parameters.
+# Converts the first parameter into a function call and the rest of the
+# parameters to the function's parameters.
 $1 "${@:2}"
-
+# Check for a bad file command
+if [ $? -ne 0 ]
+then
+	echo "No such command" 1>&2
+	exit 5
+fi
 
 # Delete the temporary data file if necessary
 if [ "$#" = "1" ]

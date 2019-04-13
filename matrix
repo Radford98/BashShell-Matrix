@@ -140,7 +140,7 @@ add () {
 
 if [ $# -ne 2 ]
 then
-	echo "Improper number of matrices"
+	echo "Improper number of matrices" 1>&2
 	exit 2
 fi
 
@@ -157,7 +157,7 @@ COLS2=$COLS
 # Check if matrices are the same size
 if [ $ROWS1 -ne $ROWS2 ] || [ $COLS1 -ne $COLS2 ]
 then
-	echo "Matrices must be the same size"
+	echo "Matrices must be the same size" 1>&2
 	exit 3
 fi
 
@@ -198,7 +198,38 @@ done < $2
 }
 
 ###########################################################################################
-#
+# Accepts two matrices of MxN and NxP and multiplies them together, resulting in a matrix
+# of MxP
+multiply () {
+
+# Error checking
+if [ $# -ne 2 ]
+then
+	echo "Improper number of matrices" 1>&2
+	exit 2
+fi
+
+# Grab the dimensions of both matrices
+datafilepath=$1
+dims $datafilepath > /dev/null
+ROWS1=$ROWS
+COLS1=$COLS
+datafilepath=$2
+dims $datafilepath > /dev/null
+ROWS2=$ROWS
+COLS2=$COLS
+
+# Check if the matrices are properly size
+if [ $COLS1 -ne $ROWS2 ]
+then
+	echo "Improperly sized matrices" 1>&2
+	exit 3
+fi
+
+
+
+
+}
 
 # Converts the first parameter into a function call and the rest of the parameters to the function's parameters.
 $1 "${@:2}"

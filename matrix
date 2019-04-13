@@ -163,6 +163,39 @@ fi
 
 echo "add function"
 
+# Put all of the values of the first matrix in an array for addition later
+ARRAY=()
+while read
+do
+	for var in $REPLY
+	do
+		ARRAY+=( "$var" )
+	done
+done < $1
+
+# Add values of matrix 2 to those of matrix 1
+# Formula, as discussed in previous function, is (current row * total columns) + current column.
+# Construct and print the rows while we're at it
+i=0
+while read
+do
+	STRING=""
+	j=0
+	for var in $REPLY
+	do
+		(( ARRAY[ (( (i * COLS1) + j )) ]+=var ))
+		STRING+="${ARRAY[ (( (i*COLS1)+j )) ]}\t"
+		
+		(( j++ ))
+	done
+
+	# Report the matrix line by line
+	STRING=${STRING%?}
+	STRING=${STRING%?}
+	echo -e $STRING
+
+	(( i++ ))
+done < $2
 
 }
 

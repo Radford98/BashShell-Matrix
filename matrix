@@ -134,9 +134,39 @@ echo -e $STRING
 
 }
 
+###########################################################################################
+# Accepts two matrices of the same size and adds them together, printing out the new matrix
+add () {
 
-#
-#additional functions go here
+if [ $# -ne 2 ]
+then
+	echo "Improper number of matrices"
+	exit 2
+fi
+
+# Grab the dimensions of both matrices
+datafilepath=$1
+dims $datafilepath > /dev/null
+ROWS1=$ROWS
+COLS1=$COLS
+datafilepath=$2
+dims $datafilepath > /dev/null
+ROWS2=$ROWS
+COLS2=$COLS
+
+# Check if matrices are the same size
+if [ $ROWS1 -ne $ROWS2 ] || [ $COLS1 -ne $COLS2 ]
+then
+	echo "Matrices must be the same size"
+	exit 3
+fi
+
+echo "add function"
+
+
+}
+
+###########################################################################################
 #
 
 # Converts the first parameter into a function call and the rest of the parameters to the function's parameters.

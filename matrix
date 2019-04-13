@@ -60,9 +60,35 @@ do
 	done
 done < $datafilepath
 
+# The following loop uses a formula to construct the transposed matrix line-by-line,
+# building a string and echoing it when the line is complete.
+# The formula is (current row * total columns) + current column. The numbering for current
+# row/column starts at 0 to reflect array values.
+# The i loop is rows, but uses COLS so the transposed matrix has the correct dimension.
+# Opposite for j. In the formula, j is used as "current row" because the formula refers
+# to the original matrix, not the new one being constructed.
+i=0
+while [ $i -lt $COLS ]
+do
+	STRING=""	# Reset string to empty
+
+	j=0
+	while [ $j -lt $ROWS ]
+	do
+		# Construct the string
+		STRING+="${ARRAY[ (( (j*COLS)+i )) ]}\t"
+		(( j++ ))
+	done
+
+	# Report the transposed matrix one line at a time, after removing the final tab
+	STRING=${STRING%?}
+	STRING=${STRING%?}
+	echo -e $STRING
+
+	(( i++ ))
+done
+
 }
-
-
 
 ###########################################################################################
 # Accepts a matrix either from stdin or as a parameter. It calculates and prints the mean of
@@ -100,11 +126,11 @@ do
 done
 
 # Remove the tab from the end of the string
-STRING=${STRING%?%?}
+STRING=${STRING%?}
+STRING=${STRING%?}
 
 # Report the means as a 1xN matrix
 echo -e $STRING
-
 
 }
 

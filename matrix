@@ -4,6 +4,8 @@
 
 #!/bin/bash
 
+trap finish EXIT
+
 # Set up file path - used for dims, mean, transpose
 datafilepath="datafile$$"
 if [ "$#" = "1" ]
@@ -276,6 +278,12 @@ done < $1
 
 }
 
+# Function in the trap statement to remove any temporary files when the program exits
+# The idea for using the exit signal came from redsymbol.net/articles/bash-exit-traps/
+finish () {
+rm -f datafile*
+}
+
 # Converts the first parameter into a function call and the rest of the
 # parameters to the function's parameters.
 $1 "${@:2}"
@@ -285,7 +293,3 @@ then
 	echo "No such command" 1>&2
 	exit 5
 fi
-
-# Remove temporary files
-rm -f datafile*
-

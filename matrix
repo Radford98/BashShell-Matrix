@@ -286,8 +286,6 @@ then
 	exit 5
 fi
 
-# Delete the temporary data file if necessary
-if [ "$#" = "1" ]
-then
-	rm -f $datafilepath
-fi
+# Remove temporary files
+rm -f datafile*
+

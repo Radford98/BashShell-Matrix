@@ -1,7 +1,9 @@
 #Brad Powell
 #CS344_400 Spring 2019
 #Program 1 - Matrix
-#Usage: matrix dims/transpose/mean/add/multiply m1 [m2]
+#Usage: matrix dims/transpose/mean m1/m2/m3
+#Usage: matrix add m1 m3
+#Usage: matrix multiply m1 m2
 #Performs one of the following actions: prints dimensions of the matrix, transposes it, finds the mean,
 #adds two matrices together, or multiplies two matricies.
 
